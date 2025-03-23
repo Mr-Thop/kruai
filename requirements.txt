@@ -7,3 +7,4 @@ langchain_google_genai
 langchain_postgres
 psycopg2
 google-genai
+gunicorn
