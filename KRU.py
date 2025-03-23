@@ -37,7 +37,7 @@ def initialize_model():
     response = chats.send_message(PROMPT)
     return chats
 
-@app.route('/chat', methods=['POST'])
+@app.route('/chat', methods=['GET','POST'])
 def chat():
     data = request.json
     user_input = data.get("message")
