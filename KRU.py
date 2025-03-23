@@ -60,6 +60,10 @@ def chat():
     response = model.send_message(message)
     return jsonify({"response": response.text.replace("*", "")})
 
+@app.route('/')
+def home():
+    return "KRU.ai Backend is Running!"
+
+
 if __name__ == '__main__':
-    port = int(os.getenv("PORT", 5000))  # Use PORT from Render, default to 5000
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(debug=True)
