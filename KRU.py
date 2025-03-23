@@ -58,7 +58,8 @@ def chat():
             '''
     
     response = model.send_message(message)
-    return jsonify({"response": response.text.replace("*", "")})
+    response_data = {"response": response.text.replace("*", "")}
+    return jsonify(response_data) , 200 , {"Content-Type": "application/json"}
 
 @app.route('/')
 def home():
