@@ -1,0 +1,9 @@
+flask
+Flask-Cors
+flask[async]
+PyPDF2
+pyspellchecker
+langchain_google_genai
+langchain_postgres
+psycopg2
+google-genai
