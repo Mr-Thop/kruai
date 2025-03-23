@@ -5,6 +5,7 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_postgres import PGVector
 from google import genai
 import os
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -58,7 +59,14 @@ def chat():
             '''
     
     response = model.send_message(message)
-    response_data = {"response": response.text.replace("*", "")}
+    try:
+        response_dict = json.loads(response.text.strip())
+        if isinstance(response_dict, dict) and response_dict.get("type") == "output":
+            response_data = {"response": response_dict.get("output", "").replace("*", "")}
+        else:
+            response_data = {"response": response.text.replace("*", "")}
+    except json.JSONDecodeError:
+        response_data = {"response": response.text.replace("*", "")}
     return jsonify(response_data) , 200 , {"Content-Type": "application/json"}
 
 @app.route('/')
