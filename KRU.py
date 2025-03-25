@@ -10,6 +10,7 @@ import json
 app = Flask(__name__)
 CORS(app)
 
+
 # Configuration
 GOOGLE_API_KEY = os.getenv("API_KEY")
 CONNECTION_STRING = os.getenv("CONNECTION_STRING")
@@ -38,6 +39,11 @@ def initialize_model():
     response = chats.send_message(PROMPT)
     return chats
 
+model = initialize_model()
+embeddings = GoogleGenerativeAIEmbeddings(google_api_key=GOOGLE_API_KEY, 
+                                              model="models/text-embedding-004")
+db = PGVector(embeddings, connection=CONNECTION_STRING, collection_name=COLLECTION_NAME, use_jsonb=True)
+
 @app.route('/chat', methods=['GET','POST'])
 def chat():
     data = request.json
@@ -46,11 +52,7 @@ def chat():
     if not user_input:
         return jsonify({"error": "No message provided"}), 400
     
-    embeddings = GoogleGenerativeAIEmbeddings(google_api_key=GOOGLE_API_KEY, 
-                                              model="models/text-embedding-004")
-    db = PGVector(embeddings, connection=CONNECTION_STRING, collection_name=COLLECTION_NAME, use_jsonb=True)
     
-    model = initialize_model()
     context = search_documents(user_input, db)
     
     message = f'''
